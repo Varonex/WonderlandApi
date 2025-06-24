@@ -1,0 +1,36 @@
+{
+	"include": ["src/**/*"],
+	"ts-node": {
+		"compilerOptions": {
+			"module": "commonjs",
+			"types": [
+				"node"
+			],
+		}
+	},
+  "compilerOptions": {
+		"noEmit": true,
+		"incremental": true,
+		"sourceMap": true,
+		"noImplicitAny": true,
+		"esModuleInterop": true,
+		"allowImportingTsExtensions": true,
+		"allowSyntheticDefaultImports": true,
+		"resolveJsonModule": true,
+		"skipLibCheck": true,
+		"experimentalDecorators": true,
+		"emitDecoratorMetadata": true,
+		"isolatedModules": true,
+		"module": "esNext",
+    "target": "es2020",
+		"moduleResolution": "node",
+    "jsx": "react-jsx",
+    "strict": true,
+		"rootDir": "./src",
+		"outDir": "./out",
+		"lib": [
+			"esNext",
+			"DOM"
+		],
+  },
+}

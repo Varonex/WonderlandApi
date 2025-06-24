@@ -1,0 +1,5 @@
+out/
+src/backend/script/
+!src/backend/script/script.ts
+
+*.txt
