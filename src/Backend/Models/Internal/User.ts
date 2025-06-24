@@ -7,9 +7,10 @@ import {
 	PrimaryColumn
 } from "typeorm";
 import {Comment} from "./Comment";
+import {DBModel} from "../DBModel.ts";
 
 @Entity()
-export class User
+export class User extends DBModel
 {
 	@PrimaryColumn()
 	id!: number;

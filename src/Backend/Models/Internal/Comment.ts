@@ -7,9 +7,10 @@ import {
 	UpdateDateColumn
 } from "typeorm";
 import {User} from "./User";
+import {DBModel} from "../DBModel.ts";
 
 @Entity()
-export class Comment
+export class Comment extends DBModel
 {
 	@PrimaryColumn()
 	id!: number;
