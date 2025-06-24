@@ -9,6 +9,8 @@ import {Script} from "../../Scripts/Script.ts";
  */
 export default class RunCommand extends CmdCommand
 {
+	/* METHODES METIER */
+
 	/**
 	 * Vérifie si un script correspond à un fichier.
 	 * @param scriptName - Script.
@@ -20,10 +22,12 @@ export default class RunCommand extends CmdCommand
 		return fileName !== "Script" && (new RegExp(`^${scriptName}.ts$`)).test(fileName);
 	}
 
-	async execute(argv: string[]): Promise<void>
+	/* IMPLEMENTATIONS */
+
+	async execute(): Promise<void>
 	{
 		// Le nom du script est en 0.
-		const scriptName: string = argv[0];
+		const scriptName: string = this.argv[0];
 		const dirPath: string = __WONDERLAND_API_BACKEND_PATH__ + "/Scripts";
 
 		// Les fichiers dans Backend/Scripts.
@@ -37,17 +41,18 @@ export default class RunCommand extends CmdCommand
 			{ // Le nom match, on require & instancie la classe.
 				import(`${dirPath}/${file}`)
 					.then(async(module) => {
-						// On prend l'objet défaut.
+						// On prend l'objet exporté par défaut.
 						const cls = module.default;
 
 						// On lance la commande.
 						try
 						{
-							await ((new cls()) as Script).run(argv);
+							await ((new cls()) as Script).run(this.argv);
+							Log.success(`Le script "${scriptName}" a été exécuté avec succès`);
 						}
 						catch(err)
 						{
-							Log.error(`Le script \"${scriptName}\" a rencontré une erreur d'exécution`);
+							Log.error(`Le script "${scriptName}" a rencontré une erreur d'exécution`);
 							throw err;
 						}
 					})

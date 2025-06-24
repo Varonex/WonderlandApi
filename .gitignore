@@ -1,7 +1,11 @@
+# Dossiers principaux.
 .idea/
 node_modules/
 out/
-src/backend/script/
-!src/backend/script/script.ts
 
+# Scripts.
+src/Backend/Scripts/
+!src/Backend/Scripts/Script.ts.ts
+
+# Additions.
 *.txt

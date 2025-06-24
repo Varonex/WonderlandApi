@@ -20,6 +20,9 @@ function matchName(commandName: string, fileName: string): boolean
 	return (new RegExp(`^${commandName}Command.ts$`)).test(fileName);
 }
 
+/**
+ * Lancement de la commande.
+ */
 async function main()
 {
 	// Le nom de la commande est en 2.
@@ -37,11 +40,11 @@ async function main()
 		{ // Le nom match, on require & instancie la classe.
 			import(`${dirPath}/${file}`)
 				.then((module) => {
-					// On prend l'objet défaut.
+					// On prend l'objet exporté par défaut.
 					const cls = module.default;
 
 					// On lance la commande.
-					((new cls()) as CmdCommand).execute(process.argv.slice(3));
+					((new cls(process.argv.slice(3))) as CmdCommand).execute();
 				});
 
 			// On quitte.
