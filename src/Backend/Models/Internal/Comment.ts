@@ -3,16 +3,16 @@ import {
 	CreateDateColumn,
 	DeleteDateColumn,
 	Entity,
-	ManyToOne, PrimaryColumn,
+	ManyToOne, PrimaryGeneratedColumn,
 	UpdateDateColumn
 } from "typeorm";
 import {User} from "./User";
-import {DBModel} from "../DBModel.ts";
+import {BaseModel} from "../BaseModel.ts";
 
 @Entity()
-export class Comment extends DBModel
+export class Comment extends BaseModel
 {
-	@PrimaryColumn()
+	@PrimaryGeneratedColumn()
 	id!: number;
 
 	@Column()

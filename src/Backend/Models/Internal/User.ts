@@ -4,15 +4,15 @@ import {
 	CreateDateColumn,
 	UpdateDateColumn,
 	OneToMany,
-	PrimaryColumn
+	PrimaryGeneratedColumn
 } from "typeorm";
 import {Comment} from "./Comment";
-import {DBModel} from "../DBModel.ts";
+import {BaseModel} from "../BaseModel.ts";
 
 @Entity()
-export class User extends DBModel
+export class User extends BaseModel
 {
-	@PrimaryColumn()
+	@PrimaryGeneratedColumn()
 	id!: number;
 
 	@Column()
