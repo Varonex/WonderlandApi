@@ -43,46 +43,5 @@ warning()
 	echo -e "[ $(colorize 33 "WARN") ]: $1"
 }
 
-# COMMANDES.
-
-# Liste des commandes. Clé = commande, Valeur = documentation.
-declare -A commands
-
-commands[help]="""Donne cette aide.
-"""
-
-commands[run]="""Exécute un script .ts depuis $backend/script.
-- [ScriptName] : Nom du fichier à exécuter. Ne doit pas comporter l'extension.
-"""
-
-commands[migrations]="""Gestionnaire des migrations.
-- migrate : Réalise toutes les migrations non effectuées,
-- rollback : Remonte la dernière migration,
-- new [MigrationName] : Créé une migration dans Back/Migrations au nom désiré.
-"""
-
-# MAIN.
-
-# Vérifie le nombre d'arguments.
-if [[ $# -lt 1 ]]; then
-	error "Nombre d'arguments insuffisant. Utilisez help pour avoir une liste des commandes."
-fi
-
-# Fait le dispatch selon $used.
-used="$1"
-ok=0
-
-for cmd in "${!commands[@]}"; do
-	if [[ "$cmd" == "$used" ]]; then
-		# On exécute la commande en passant les arguments.
-		npx ts-node "$binaries/CommandDispatch.ts" "$@"
-
-		# On marque que la commande a été trouvée, et on break.
-		ok=1
-		break
-	fi
-done
-
-if [[ "$ok" -eq 0 ]]; then
-	error "Commande \"$used\" introuvable. Utilisez help pour avoir une liste des commandes."
-fi
+# LANCEMENT COMMANDE.
+npx ts-node "$binaries/CommandDispatch.ts" "$@"
