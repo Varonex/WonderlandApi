@@ -44,7 +44,7 @@ async function main()
 					const cls = module.default;
 
 					// On lance la commande.
-					((new cls(process.argv.slice(3))) as CmdCommand).execute();
+					((new cls(process.argv.slice(2))) as CmdCommand).execute();
 				});
 
 			// On quitte.
@@ -53,7 +53,7 @@ async function main()
 	}
 
 	// Erreur.
-	Log.error(`Commande ${commandName} introuvable pour le dispatch`);
+	Log.error(`Commande \"${commandName}\" introuvable`);
 }
 
 // Lancement.
