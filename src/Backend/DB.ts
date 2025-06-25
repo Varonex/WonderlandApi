@@ -2,6 +2,8 @@ import {DataSource, DefaultNamingStrategy, NamingStrategyInterface} from "typeor
 import {Models} from "./Models/Models.ts";
 import {snakeCase} from "typeorm/util/StringUtils";
 
+/* STRATEGIES */
+
 /**
  * Stratégie de nommage pour déduire le nom des colonnes, tables, ... depuis leur reflection.
  */
@@ -71,10 +73,12 @@ class snakeCaseStrategy extends DefaultNamingStrategy
 	}
 }
 
+/* DATA SOURCES */
+
 /**
- *
+ * Connexion à la base de données.
  */
-export const Db = new DataSource({
+export const DB = new DataSource({
 	type: "postgres",
 	host: "localhost",
 	port: 5432,
