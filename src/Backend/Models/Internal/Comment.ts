@@ -9,7 +9,9 @@ import {
 import {User} from "./User";
 import {BaseModel} from "../BaseModel.ts";
 
-@Entity()
+@Entity({
+	name: "comments"
+})
 export class Comment extends BaseModel
 {
 	@PrimaryGeneratedColumn()

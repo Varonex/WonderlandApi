@@ -1,7 +1,7 @@
 import {Migration} from "../../Migrations/Migration.ts";
 
 /**
- * Erreur à utiliser en cas
+ * Erreur à utiliser en cas de migration impossible à rollback.
  */
 export class CannotRollbackError extends Error
 {

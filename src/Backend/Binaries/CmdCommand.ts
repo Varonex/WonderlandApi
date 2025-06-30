@@ -1,3 +1,6 @@
+import fs from "fs/promises";
+import Log from "../../Log.ts";
+
 /**
  * Interface d'une définition d'option.
  */
@@ -11,7 +14,7 @@ export interface OptionDefinition
 	/**
 	 * Description de l'option.
 	 */
-	commandDescription: string;
+	commandDescription: string,
 
 	/**
 	 * Les sous-options possibles.
@@ -38,6 +41,12 @@ export abstract class CmdCommand
 	protected argv: string[];
 
 	/**
+	 * Chemin racine.
+	 * @protected
+	 */
+	protected readonly path!: string;
+
+	/**
 	 * Définition des options selon une arborescence d'exécution.
 	 * @protected
 	 */
@@ -58,7 +67,6 @@ export abstract class CmdCommand
 	/* CONSTRUCTEUR */
 
 	/**
-	 * Constructeur qui assigne argv.
 	 * @param argv - Argv.
 	 */
 	constructor(argv: string[])
@@ -66,7 +74,7 @@ export abstract class CmdCommand
 		this.argv = argv;
 	}
 
-	/* METHODES METIER */
+	/* MÉTHODES METIER */
 
 	protected async parseNextArgument(): Promise<void>
 	{
@@ -75,7 +83,17 @@ export abstract class CmdCommand
 			return;
 
 		// Lancement de l'option. Si une option est déjà renseignée, on cherche dans les enfants, sinon on cherche dans la racine.
-		this.currentOption = (this.currentOption?.children ?? this.options)[this.argv[this.currentArgumentIndex]];
+		const option = (this.currentOption?.children ?? this.options)[this.argv[this.currentArgumentIndex]];
+
+		// Si undefined, on met une erreur.
+		if (option === undefined)
+		{
+			Log.error(`Option "${this.argv[this.currentArgumentIndex]}" invalide`);
+			process.exit(1);
+		}
+
+		// On assigne.
+		this.currentOption = option;
 
 		// On incrémente l'indexe.
 		this.currentArgumentIndex++;
@@ -112,7 +130,7 @@ export abstract class CmdCommand
 	/**
 	 * Formatte l'aide pour les options.
 	 */
-	public formatOptionsHelp(): string
+	formatOptionsHelp(): string
 	{
 		// Description globale.
 		let res: string[] = [];
@@ -123,7 +141,36 @@ export abstract class CmdCommand
 		return (res.length > 0 ? res.join("\n") : "");
 	}
 
-	/* METHODES ABSTRAITES */
+	/**
+	 * Vérifie si un nom de fichier correspond à un prédicat.
+	 * @param fileName - Fichier.
+	 * @param predicate - Prédicat.
+	 */
+	protected matchName(fileName: string, predicate: RegExp|string): boolean
+	{
+		const regexp: RegExp = (predicate instanceof RegExp) ? predicate : new RegExp(predicate);
+
+		return regexp.test(fileName);
+	}
+
+	/**
+	 * Détermine si un fichier existe dans le sous-dossier concerné.
+	 * @param fileName - Nom du fichier à récupérer.
+	 * @protected
+	 */
+	protected async searchFile(fileName: RegExp|string): Promise<string|undefined>
+	{
+		// Lie le dossier lié.
+		const files: string[] = await fs.readdir(this.path);
+
+		// Retrouve le fichier si existant.
+		return files.find(file => this.matchName(
+			file,
+			(fileName instanceof RegExp) ? fileName : `${fileName}.ts`
+		));
+	}
+
+	/* MÉTHODES ABSTRAITES */
 
 	/**
 	 * Lance la commande.
