@@ -1,9 +1,10 @@
 import {CmdCommand} from "../CmdCommand.ts";
-import {__WONDERLAND_API_BACKEND_PATH__} from "../../../Globals.ts";
+import {__WONDERLAND_API_BACKEND_PATH__, generatePath} from "../../../Globals.ts";
 import fs from "fs/promises";
 import Log from "../../../Log.ts";
 import {Script} from "../../Scripts/Script.ts";
 import {DB} from "../../DB.ts";
+import ScriptTemplate from "../../Templates/Scripts/ScriptTemplate.ts";
 
 /**
  * Commande de lancement d'un script.
@@ -15,7 +16,7 @@ export default class ScriptsCommand extends CmdCommand
 	/**
 	 * Chemin des scripts.
 	 */
-	readonly scriptsPath: string = __WONDERLAND_API_BACKEND_PATH__ + "/Scripts";
+	protected readonly path: string = generatePath(__WONDERLAND_API_BACKEND_PATH__, "Scripts");
 
 	/**
 	 * @inheritDoc
@@ -23,7 +24,7 @@ export default class ScriptsCommand extends CmdCommand
 	protected options = {
 		new: {
 			commandDescription: "Créé un nouveau script avec le nom désiré.",
-			commandCall: async() => console.log("Option new utilisée"),
+			commandCall: this.new.bind(this),
 		},
 		run: {
 			commandDescription: "Exécute le script désiré.",
@@ -34,14 +35,39 @@ export default class ScriptsCommand extends CmdCommand
 	/* METHODES METIER */
 
 	/**
-	 * Vérifie si un script correspond à un fichier.
-	 * @param scriptName - Script.
-	 * @param fileName - Fichier.
+	 * Argument 1. Créé le script précisé.
+	 * @private
 	 */
-	private matchName(scriptName: string, fileName: string): boolean
+	private async new(): Promise<void>
 	{
-		// Evite de lancer le fichier "Script.ts".
-		return fileName !== "Script" && (new RegExp(`^${scriptName}.ts$`)).test(fileName);
+		// Le nom du script est en 2.
+		const scriptName: string = this.argv[2];
+
+		// Vérifie l'existence du nom.
+		if (scriptName === undefined)
+		{
+			Log.error(`Nom de script invalide ("${scriptName}")`);
+			process.exit(1);
+		}
+
+		// Vérifie le fichier si existant.
+		const found: string|undefined = await this.searchFile(scriptName);
+
+		if (found !== undefined)
+		{ // Erreur.
+			Log.error(`Script \"${scriptName}\" déjà existant`);
+			process.exit(3);
+		}
+
+		// Ecriture.
+		await fs.writeFile(
+			generatePath(this.path, `${scriptName}.ts`),
+
+			// Génère le template des scripts.
+			(new ScriptTemplate({ scriptName: scriptName })).get()
+		);
+
+		Log.success(`Le script "${scriptName}" a été créé avec succès`);
 	}
 
 	/**
@@ -53,51 +79,51 @@ export default class ScriptsCommand extends CmdCommand
 		// Le nom du script est en 0.
 		const scriptName: string = this.argv[2];
 
-		// Les fichiers dans Backend/Scripts.
-		const files: string[] = await fs.readdir(this.scriptsPath);
-
-		// Parcours des fichiers pour déterminer quel exécutable est bon.
-		for (const file of files)
+		// Vérifie l'existence du nom. Filtre "Script".
+		if (scriptName === undefined || scriptName === "Script")
 		{
-			// Matching du nom.
-			if (this.matchName(scriptName, file))
-			{ // Le nom match, on require & instancie la classe.
-				import(`${this.scriptsPath}/${file}`)
-					.then(async(module) => {
-						// On prend l'objet exporté par défaut.
-						const cls = module.default;
-
-						// On ouvre la connexion.
-						await DB.initialize();
-
-						// On lance la commande.
-						try
-						{
-							await ((new cls()) as Script).run(this.argv);
-							Log.success(`Le script "${scriptName}" a été exécuté avec succès`);
-						}
-						catch(err)
-						{
-							Log.error(`Le script "${scriptName}" a rencontré une erreur d'exécution`);
-							throw err;
-						}
-						finally
-						{
-							// On referme la connexion.
-							await DB.destroy();
-						}
-					})
-
-				// On quitte.
-				return;
-			}
+			Log.error(`Nom de script invalide ("${scriptName}")`);
+			process.exit(1);
 		}
 
-		// Erreur.
-		Log.error(`Script \"${scriptName}\" introuvable`);
+		// Retrouve le fichier si existant.
+		const found: string|undefined = await this.searchFile(scriptName);
+
+		if (found === undefined)
+		{ // Erreur.
+			Log.error(`Script \"${scriptName}\" introuvable`);
+			process.exit(2);
+		}
+
+		// Le nom match, on require & instancie la classe.
+		import(`${this.path}/${found}`)
+			.then(async(module) => {
+				// On prend l'objet exporté par défaut.
+				const cls = module.default;
+
+				// On ouvre la connexion.
+				await DB.initialize();
+
+				// On lance la commande.
+				try
+				{
+					await ((new cls()) as Script).run(this.argv);
+					Log.success(`Le script "${scriptName}" a été exécuté avec succès`);
+				}
+				catch(err)
+				{
+					Log.error(`Le script "${scriptName}" a rencontré une erreur d'exécution`);
+					throw err;
+				}
+				finally
+				{
+					// On referme la connexion.
+					await DB.destroy();
+				}
+			});
 	}
 
-	/* IMPLEMENTATIONS */
+	/* IMPLÉMENTATIONS */
 
 	/**
 	 * @inheritDoc
