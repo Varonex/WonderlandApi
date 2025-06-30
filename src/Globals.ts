@@ -2,8 +2,6 @@
  * Gestion des globales.
  */
 
-import {PathError} from "./Backend/Errors/PathError.ts";
-
 /**
  * Chemin absolu de l'api.
  */
