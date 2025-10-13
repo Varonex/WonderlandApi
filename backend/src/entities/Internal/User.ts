@@ -7,12 +7,12 @@ import {
 	PrimaryGeneratedColumn
 } from "typeorm";
 import {Comment} from "./Comment";
-import {BaseModel} from "../BaseModel.ts";
+import {DBEntity} from "../DBEntity.ts";
 
 @Entity({
 	name: "users"
 })
-export class User extends BaseModel
+export class User extends DBEntity
 {
 	@PrimaryGeneratedColumn()
 	id!: number;

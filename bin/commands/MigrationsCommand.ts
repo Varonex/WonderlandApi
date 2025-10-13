@@ -1,10 +1,10 @@
 import {CmdCommand} from "../CmdCommand.ts";
-import {__WONDERLAND_API_BACKEND_PATH__, generatePath} from "../../../Globals.ts";
-import Log from "../../../Log.ts";
+import {WONDERLAND_PATHS, generatePath} from "../../Globals.ts";
+import Log from "../../Log.ts";
 import fs from "fs/promises";
-import MigrationTemplate from "../../Templates/Migrations/MigrationTemplate.ts";
-import {DB} from "../../DB.ts";
-import {WonderlandMigration} from "../../Models/Internal/WonderlandMigration.ts";
+import MigrationTemplate from "../../shared/termplates/Migrations/MigrationTemplate.ts";
+import {DB} from "../../backend/DB.ts";
+import {WonderlandMigration} from "../../backend/src/entities/Internal/WonderlandMigration.ts";
 
 export default class MigrationsCommand extends CmdCommand
 {
@@ -13,7 +13,7 @@ export default class MigrationsCommand extends CmdCommand
 	/**
 	 * Chemin des scripts.
 	 */
-	protected readonly path: string = generatePath(__WONDERLAND_API_BACKEND_PATH__, "Migrations", "Migrations");
+	protected readonly path: string = generatePath(WONDERLAND_PATHS.backend, "migrations", "migrations");
 
 	/**
 	 * @inheritDoc

@@ -1,4 +1,4 @@
-import {Migration} from "../../Migrations/Migration.ts";
+import {Migration} from "../../../backend/migrations/Migration.ts";
 
 /**
  * Erreur à utiliser en cas de migration impossible à rollback.

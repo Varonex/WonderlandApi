@@ -1,10 +1,10 @@
 import {CmdCommand} from "../CmdCommand.ts";
-import {__WONDERLAND_API_BACKEND_PATH__, generatePath} from "../../../Globals.ts";
+import {WONDERLAND_PATHS, generatePath} from "../../Globals.ts";
 import fs from "fs/promises";
-import Log from "../../../Log.ts";
-import {Script} from "../../Scripts/Script.ts";
-import {DB} from "../../DB.ts";
-import ScriptTemplate from "../../Templates/Scripts/ScriptTemplate.ts";
+import Log from "../../Log.ts";
+import {Script} from "../../backend/scripts/Script.ts";
+import {DB} from "../../backend/DB.ts";
+import ScriptTemplate from "../../shared/termplates/Scripts/ScriptTemplate.ts";
 
 /**
  * Commande de lancement d'un script.
@@ -16,7 +16,7 @@ export default class ScriptsCommand extends CmdCommand
 	/**
 	 * Chemin des scripts.
 	 */
-	protected readonly path: string = generatePath(__WONDERLAND_API_BACKEND_PATH__, "Scripts");
+	protected readonly path: string = generatePath(WONDERLAND_PATHS.backend, "scripts");
 
 	/**
 	 * @inheritDoc

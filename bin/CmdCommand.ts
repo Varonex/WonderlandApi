@@ -1,5 +1,5 @@
 import fs from "fs/promises";
-import Log from "../../Log.ts";
+import Log from "../Log.ts";
 
 /**
  * Interface d'une définition d'option.

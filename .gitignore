@@ -3,9 +3,9 @@
 node_modules/
 out/
 
-# Scripts.
-src/Backend/Scripts/
-!src/Backend/Scripts/Script.ts.ts
+# scripts.
+backend/scripts/
+!backend/scripts/Script.ts.ts
 
 # Additions.
 *.txt

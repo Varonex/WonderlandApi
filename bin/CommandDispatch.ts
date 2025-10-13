@@ -1,6 +1,6 @@
 import fs from "fs/promises";
-import {__WONDERLAND_API_BACKEND_PATH__} from "../../Globals.ts";
-import Log from "../../Log.ts";
+import {generatePath, WONDERLAND_PATHS} from "../Globals.ts";
+import Log from "../Log.ts";
 import {CmdCommand} from "./CmdCommand.ts";
 
 /**
@@ -27,9 +27,9 @@ async function main()
 {
 	// Le nom de la commande est en 2.
 	const commandName: string = process.argv[2];
-	const dirPath: string = __WONDERLAND_API_BACKEND_PATH__ + "/Binaries/Commands";
+	const dirPath: string = generatePath(WONDERLAND_PATHS.binaries, "commands");
 
-	// Les fichiers dans ./Commands.
+	// Les fichiers dans ./commands.
 	const files: string[] = await fs.readdir(dirPath);
 
 	// Parcours des fichiers pour déterminer quel exécutable est bon.

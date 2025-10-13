@@ -1,10 +1,8 @@
 #!/bin/bash
 
 # VARIABLES.
-src="src"
-backend="$src/Backend"
-frontend="$src/Frontend"
-binaries="$backend/Binaries"
+backend="backend"
+frontend="frontend"
 executable="bin/wlnd"
 
 # FONCTIONS.
@@ -44,4 +42,4 @@ warning()
 }
 
 # LANCEMENT COMMANDE.
-npx ts-node "$binaries/CommandDispatch.ts" "$@"
+npx ts-node "./CommandDispatch.ts" "$@"

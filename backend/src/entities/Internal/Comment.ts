@@ -7,12 +7,12 @@ import {
 	UpdateDateColumn
 } from "typeorm";
 import {User} from "./User";
-import {BaseModel} from "../BaseModel.ts";
+import {DBEntity} from "../DBEntity.ts";
 
 @Entity({
 	name: "comments"
 })
-export class Comment extends BaseModel
+export class Comment extends DBEntity
 {
 	@PrimaryGeneratedColumn()
 	id!: number;

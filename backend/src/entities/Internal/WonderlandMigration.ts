@@ -1,10 +1,10 @@
 import {Column, Entity, PrimaryGeneratedColumn} from "typeorm";
-import {BaseModel} from "../BaseModel.ts";
+import {DBEntity} from "../DBEntity.ts";
 
 @Entity({
 	name: "wonderland_migrations"
 })
-export class WonderlandMigration extends BaseModel
+export class WonderlandMigration extends DBEntity
 {
 	@PrimaryGeneratedColumn()
 	/**

@@ -1,5 +1,5 @@
 import {DataSource, DefaultNamingStrategy, NamingStrategyInterface} from "typeorm";
-import {Models} from "./Models/Models.ts";
+import {Entities} from "./src/entities/Entities.ts";
 import {snakeCase} from "typeorm/util/StringUtils";
 
 /* STRATEGIES */
@@ -85,7 +85,7 @@ export const DB = new DataSource({
 	username: "remik",
 	password: "password",
 	database: "wonderland",
-	entities: Models,
+	entities: Entities,
 	synchronize: false,
 	namingStrategy: new snakeCaseStrategy(),
 });
